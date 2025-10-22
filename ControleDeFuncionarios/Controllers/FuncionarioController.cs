@@ -1,4 +1,5 @@
 ﻿using ControleDeFuncionarios.Entities;
+using ControleDeFuncionarios.Enums;
 using ControleDeFuncionarios.Services;
 using System;
 using System.Collections.Generic;
@@ -69,7 +70,28 @@ namespace ControleDeFuncionarios.Controllers
 
                 Console.Write("\nINFORME O NUMERO DO ENDEREÇO:");
                 funcionario.Endereco.Numero = Console.ReadLine() ?? string.Empty;
+
+                Console.WriteLine("\nCARGOS:");
+                foreach (var item in Enum.GetValues(typeof(Cargo))) //listando os cargos
+                {
+                    var valor = (int)item; //capturando o valor de cada opção do enum
+                    var nome = item.ToString(); //capturando o nome de cada opção do enum
+
+                    Console.WriteLine($"\t{valor} - {nome}");
+                }
+
+                Console.Write("\nINFORME O CARGO DESEJADO: ");
+                funcionario.Cargo = (Cargo)int.Parse(Console.ReadLine() ?? string.Empty);
+
+                //Enviando para o banco de dados (repositório)
+                var funcionarioRepository = new Repositories.FuncionarioRepository();
+                funcionarioRepository.Inserir(funcionario);
+
+                Console.WriteLine($"\nFuncionário {funcionario.Nome} cadastrado com sucesso!" );
+
+
             }
+
             catch (Exception e)
             {
 
